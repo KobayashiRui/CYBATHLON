@@ -1,5 +1,6 @@
 import blv_lib
 import time
+import serial
 
 client = serial.Serial("/dev/ttyXRUSB0", 115200, timeout=0.1, parity=serial.PARITY_EVEN,stopbits=serial.STOPBITS_ONE) # COMポートは自分の奴を入れる
 
