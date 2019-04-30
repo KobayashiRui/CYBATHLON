@@ -227,8 +227,9 @@ class B3mClass(object):
 		self.b3mSerial.flush()	#全送信するまで待機
 		# start = time.time()
 		rxBuf=self.b3mSerial.read(rxLen)
+		print(rxBuf)
 		# self.lastSnycEndTime = time.time()	#受信完了時間
-		rxBuf = map(lambda x:x, rxBuf)
+		rxBuf = list(map(lambda x:x, rxBuf))
 
 		if len(rxBuf) == rxLen:
 			# snycTime = self.lastSnycEndTime - start

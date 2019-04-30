@@ -10,7 +10,7 @@ if __name__ == '__main__':
 	aaa = b3mCtrl.B3mClass()
 	aaa.begin("/dev/ttyUSB0",1500000)
 
-	idx= [3]
+	idx= [1]
 	for id in idx:
 		print(aaa.setMode(id,"FREE"))
 		print(aaa.setTrajectoryType(id,"EVEN"))
