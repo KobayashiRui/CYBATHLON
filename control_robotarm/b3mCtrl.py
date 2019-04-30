@@ -124,26 +124,26 @@ class B3mClass(object):
 	def degToPos(deg):
 		pos = int(deg*(B3mClass.MAX_POS-B3mClass.MIN_POS)/640.0)
 		if (B3mClass.__checkRange(pos, 32000, -32000) is False):
-			#print("deg range error")
+			print("deg range error")
 			return False
 		return pos
 	@staticmethod
 	def posToDeg(pos):
 		if (B3mClass.__checkRange(pos, 32000, -32000) is False):
-			#print "pos range error"
+			print("pos range error")
 			return False
 		return (pos-7500)*640.0/(B3mClass.MAX_POS-B3mClass.MIN_POS)
 	@staticmethod
 	def radToPos(rad):
 		pos = (B3mClass.MAX_POS - B3mClass.MIN_POS)/(640.0/180.0)*(rad/math.pi)
 		if (B3mClass.__checkRange(pos, 32000, -32000) is False):
-			#print "rad range error"
+			print("rad range error")
 			return False
 		return int(pos)
 	@staticmethod
 	def posToRad(pos):
 		if (B3mClass.__checkRange(pos, 32000, -32000) is False):
-			#print "pos range error"
+			print("pos range error")
 			return False
 		return pos*(640.0/180.0)*math.pi/(B3mClass.MAX_POS-B3mClass.MIN_POS)
 	@staticmethod
@@ -212,7 +212,7 @@ class B3mClass(object):
 
 		self.gardTime = 2.0/self.baudrate + 220*(10**-6)	#2バイト分のデータ＋220us以上
 		if self.timeout<self.gardTime:
-			#print "timeout is shorter than gardTime"
+			print("timeout is shorter than gardTime")
 		self.b3mSerial = serial.Serial(self.port, self.baudrate,  bytesize=serial.EIGHTBITS, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE, timeout=self.timeout)
 
 	def __synchronize(self, txBuf, rxLen):
@@ -232,11 +232,11 @@ class B3mClass(object):
 
 		if len(rxBuf) == rxLen:
 			# snycTime = self.lastSnycEndTime - start
-			 #print "rxTime",snycTime
+			print("rxTime",snycTime)
 			# self.txtFile.write(str(snycTime)+"\n")
 			return rxBuf
 		else:
-			#print "b3m rx signal error"+str(id)
+			print("b3m rx signal error"+str(id))
 			return False
 
 	## ROMをRAMに書き込み(シングル/マルチ)
@@ -248,7 +248,7 @@ class B3mClass(object):
 		if type(id) is not list:
 			id = [id]
 		if B3mClass.__checkRange(id, 255, 0) is False:
-			#print "id range error"
+			print("id range error")
 			return (False,False)
 		txBuf = [0x01, B3mClass.__optionToCmd(option)] + id
 		if len(id)==1:	#シングルモード
@@ -272,7 +272,7 @@ class B3mClass(object):
 		if type(id) is not list:
 			id = [id]
 		if B3mClass.__checkRange(id, B3mClass.MAX_ID, B3mClass.MIN_ID) is False:
-			#print "id range error"
+			print("id range error")
 			return (False,False)
 		txBuf = [0x02, B3mClass.__optionToCmd(option)] + id
 		if len(id)==1:	#シングルモード
@@ -298,18 +298,18 @@ class B3mClass(object):
 		if type(id) is not list:
 			id = [id]
 		if B3mClass.__checkRange(id, B3mClass.MAX_ID, B3mClass.MIN_ID) is False:
-			#print "id range error"
+			print("id range error")
 			return (False,False)
 		if B3mClass.__checkRange(address, 0xFF, 0x00) is False:
-			#print "address range error"
+			print("address range error")
 			return (False,False)
 		if B3mClass.__checkRange(length, 0xFA, 0x01) is False:
-			#print "length range error"
+			print("length range error")
 			return (False,False)
 		txBuf = [0x03, B3mClass.__optionToCmd(option)] + id + [address, length]
 		rxBuf = self.__synchronize(txBuf, length+5)
 		if (rxBuf is False):
-			#print "rx error "
+			print("rx error ")
 			return (False,False)
 		reRam = rxBuf[4:-1]
 		reStatus = rxBuf[2]
@@ -331,13 +331,13 @@ class B3mClass(object):
 		if type(data) is not list:
 			data=[data]
 		if B3mClass.__checkRange(id, B3mClass.MAX_ID, B3mClass.MIN_ID) is False:
-			#print "id range error"
+			print("id range error")
 			return (False,False)
 		if B3mClass.__checkRange(address, 0xFF, 0x00) is False:
-			#print "address range error"
+			print("address range error")
 			return (False,False)
 		if B3mClass.__checkRange(data, 0xFF, 0x00) is False:
-			#print "data range error"
+			print("data range error")
 			return (False,False)
 		if len(id)==1:	#シングル
 			txBuf = [0x04, B3mClass.__optionToCmd(option), id[0]] + flatten(data) + [address, 0x01]
@@ -368,10 +368,10 @@ class B3mClass(object):
 		if type(id) is not list:
 			id = [id]
 		if B3mClass.__checkRange(id, B3mClass.MAX_ID, B3mClass.MIN_ID) is False:
-			#print "id range error"
+			print("id range error")
 			return False
 		if B3mClass.__checkRange(time, 25500, 0):
-			#print "time range error"
+			print("time range error")
 			return False
 		txBuf = [0x05, B3mClass.__optionToCmd(option)] + id + [time&0xFF, time>>8]
 		rxBuf = self.__synchronize(txBuf, 0)
@@ -392,16 +392,16 @@ class B3mClass(object):
 		if type(pos) is not list:
 			pos = [pos]
 		if B3mClass.__checkRange(id, B3mClass.MAX_ID, B3mClass.MIN_ID) is False:
-			#print "id range error"
+			print("id range error")
 			return (False,False)
 		if B3mClass.__checkRange(pos, 32000, -32000) is False:
-			#print "position range error"
+			print("position range error")
 			return (False,False)
 		if B3mClass.__checkRange(time, 655335, 0) is False:
-			#print "time range error"
+			print("time range error")
 			return (False,False)
 		if (len(id) != len(pos)):
-			#print "id and pos length error"
+			print("id and pos length error")
 			return (False,False)
 		if B3mClass.__checkOption(option) is False:
 			return (False,False)
@@ -486,7 +486,7 @@ class B3mClass(object):
 
 	def setRam(self, id, data, property, option="ERROR"):
 		if B3mClass.__checkRange(data, self.MEMORY_MAP[property][3] , self.MEMORY_MAP[property][2]) is False:
-			#print "data range error"
+			print("data range error")
 			return False, False
 		address = self.MEMORY_MAP[property][0]
 		if self.MEMORY_MAP[property][1] == "char":
@@ -543,50 +543,50 @@ class B3mClass(object):
 		(uartError, commandError) = self.getRam(id, "StatusUart", "COMMAND")
 		(statusError, clearError) = self.getRam(id, "StatusError", "CLEAR")
 		if systemError & 0b00000001:
-			#print "Watchdog Timerが起動したときに1になります"
+			print("Watchdog Timerが起動したときに1になります")
 		if systemError & 0b00000010:
-			#print "MCUのROMに保存されているデータに何らかの不都合があった場合に1になります。"
+			print("MCUのROMに保存されているデータに何らかの不都合があった場合に1になります。")
 		if systemError & 0b00000100:
-			#print "メモリーに何らかの不具合があり、RAM割り当てに失敗したときに1になります。起動時に1度だけチェックします。"
+			print("メモリーに何らかの不具合があり、RAM割り当てに失敗したときに1になります。起動時に1度だけチェックします。")
 		if systemError & 0b00001000:
-			#print "入力電圧が上限値を超えたか、下限値を下回った場合に1になります"
+			print("入力電圧が上限値を超えたか、下限値を下回った場合に1になります")
 		if systemError & 0b00010000:
-			#print "MCU温度が上限値を超えた場合に1になります"
+			print("MCU温度が上限値を超えた場合に1になります")
 		if systemError & 0b00100000:
-			#print "AD変換に失敗したときに1になります"
+			print("AD変換に失敗したときに1になります")
 		if systemError & 0b01000000:
-			#print "I2C通信に失敗したときに1になります（未使用）"
+			print("I2C通信に失敗したときに1になります（未使用）")
 		if systemError & 0b10000000:
-			#print "SPI通信に失敗したときに1になります"
+			print("SPI通信に失敗したときに1になります")
 
 		if motorError & 0b00000001:
-			#print "モーター温度が上限値を超えた場合に1になります"
+			print("モーター温度が上限値を超えた場合に1になります")
 		if motorError & 0b00000010:
-			#print "モーターロックが検知された場合に1になります"
+			print("モーターロックが検知された場合に1になります")
 		if motorError & 0b0000100:
-			#print "モーターに流れる電流が上限値を超えた場合に1になります"
+			print("モーターに流れる電流が上限値を超えた場合に1になります")
 		if motorError & 0b00001000:
-			#print "ブラシレスモーターのホールICに不具合があった場合に1になります"
+			print("ブラシレスモーターのホールICに不具合があった場合に1になります")
 
 		if uartError & 0b00000001:
-			#print "フレミングエラー発生時に1になります"
+			print("フレミングエラー発生時に1になります")
 		if uartError & 0b00000001:
-			#print "パリティエラー発生時に1になります"
+			print("パリティエラー発生時に1になります")
 		if uartError & 0b00000001:
-			#print "ブレークエラー発生時に1になります"
+			print("ブレークエラー発生時に1になります")
 		if uartError & 0b00000001:
-			#print "オーバーランエラー発生時に1になります"
+			print("オーバーランエラー発生時に1になります")
 
 		if commandError & 0b00000001:
-			#print "コマンドのチェックサムが間違っている場合に1になります"
+			print("コマンドのチェックサムが間違っている場合に1になります")
 		if commandError & 0b00000010:
-			#print "コマンドのデバイス数が多すぎるあるいは少なすぎる場合に1になります"
+			print("コマンドのデバイス数が多すぎるあるいは少なすぎる場合に1になります")
 		if commandError & 0b00000100:
-			#print "取得するデータ長さがアドレスを越えるほど長い場合に1になります"
+			print("取得するデータ長さがアドレスを越えるほど長い場合に1になります")
 		if commandError & 0b00001000:
-			#print "アドレスが指定範囲外だった場合に1になります"
+			print("アドレスが指定範囲外だった場合に1になります")
 		if commandError & 0b00001000:
-			#print "コマンド自身が間違っている場合に1になります"
+			print("コマンド自身が間違っている場合に1になります")
 
 
 
