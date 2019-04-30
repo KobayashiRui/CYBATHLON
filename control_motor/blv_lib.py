@@ -30,6 +30,9 @@ class blv_motor():
         self.client.write(commando)
         result = self.client.read()
 
+    #加減速時間の設定
+    def acc_dec_time()
+
 
     #上記の２つをいっきに行う
     def set_speed_and_go(self,speed,fw,rev):

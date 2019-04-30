@@ -5,7 +5,7 @@ class az_motor_direct():
         self.client = client
         self.unit_id = unit_id.to_bytes(1,"big")
         self.move_list = move_list
-    
+
     def go(self,point):
         commando = b"\x10\x00\x58\x00\x10\x20\x00\x00\x00\x00\x00\x00\x00\x01" 
         point = point.to_bytes(4,'big')
@@ -19,7 +19,26 @@ class az_motor_direct():
         trigger = b"\x00\x00\x00\x01"
         commando = self.unit_id + commando + point + speed + rate + stop_rate + op_current + trigger
         crc = calc_crc16(commando)
-        commando + crc
+        commando = commando + crc
+        self.client.write(commando)
+        result = self.client.read()
+
+    #1000 = 100, 1=0.1%
+    def go_torque(self,op_current):
+        commando = b"\x10\x00\x58\x00\x10\x20\x00\x00\x00\x00\x00\x00\x00\x12" 
+        point = 0
+        point = point.to_bytes(4,'big')
+        speed = 2000
+        speed = speed.to_bytes(4,'big')
+        rate  = 1500
+        rate  = rate.to_bytes(4,'big')
+        stop_rate = 1500
+        stop_rate = stop_rate.to_bytes(4,'big')
+        op_current = op_current.to_bytes(4,'big')
+        trigger = b"\x00\x00\x00\x01"
+        commando = self.unit_id + commando + point + speed + rate + stop_rate + op_current + trigger
+        crc = calc_crc16(commando)
+        commando = commando + crc
         self.client.write(commando)
         result = self.client.read()
 
