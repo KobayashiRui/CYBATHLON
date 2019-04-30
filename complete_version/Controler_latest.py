@@ -130,10 +130,6 @@ while True:
                             LU_mode = 2
                             motor3.go(point=17200,speed=200,rate=1)
                             motor4.go(point=17200,speed=200,rate=1)
-                            #motor3.go(point=13200,speed=200,rate=1)
-                            #motor4.go(point=13200,speed=200,rate=1)
-                            #motor3.go_torque(800)
-                            #motor4.go_torque(800)
                             
                         elif Z_push < -250:
                             LU_mode = 0
@@ -183,8 +179,6 @@ while True:
                             elif R_list[0] < 0:#右をはやく
                                 motor1.set_speed(int(abs(80*R_list[0]*0.01)) + int(R_list[2]*0.04))
                                 motor2.set_speed(int(abs(80*R_list[0]*0.01)))
-                            #motor1.go(0,1)
-                            #motor2.go(1,0)
                             motor1.go(1,0)
                             motor2.go(0,1)
                         elif R_list[0] < 0:  #後進移動
@@ -194,11 +188,9 @@ while True:
                             elif R_list[1] < 0:#右をはやく
                                 motor1.set_speed(int(abs(80*R_list[0]*0.01)))
                                 motor2.set_speed(int(abs(80*R_list[0]*0.01)) + int(abs(R_list[2]*0.04)))
-                            #motor1.go(1,0)
-                            #motor2.go(0,1)
                             motor1.go(0,1)
                             motor2.go(1,0)
-                        elif R_list[2] > 0: #右は前,左は後ろ
+                        elif R_list[2] > 0 and LU_mode==2: #右は前,左は後ろ
                             motor1.set_speed(int(abs(80*R_list[2]*0.01)))
                             motor2.set_speed(int(abs(80*R_list[2]*0.01)))
                             motor1.go(1,0)
