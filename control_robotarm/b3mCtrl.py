@@ -228,15 +228,15 @@ class B3mClass(object):
 		# start = time.time()
 		rxBuf=self.b3mSerial.read(rxLen)
 		# self.lastSnycEndTime = time.time()	#受信完了時間
-		rxBuf = map(lambda x:ord(x), rxBuf)
+		rxBuf = map(lambda x:x, rxBuf)
 
 		if len(rxBuf) == rxLen:
 			# snycTime = self.lastSnycEndTime - start
-			print("rxTime",snycTime)
+			#print("rxTime",snycTime)
 			# self.txtFile.write(str(snycTime)+"\n")
 			return rxBuf
 		else:
-			print("b3m rx signal error"+str(id))
+			#print("b3m rx signal error"+str(id))
 			return False
 
 	## ROMをRAMに書き込み(シングル/マルチ)
