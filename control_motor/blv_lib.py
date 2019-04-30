@@ -16,11 +16,13 @@ class blv_motor():
         result = self.client.read()
 
     #回転開始関数(回転速度No.0)
-    def go(self,fw,rev): #fw : 正回転方向のフラグ , rev : 反対回転方向のフラグ
+    def go(self,fw,rev,stop=1): #fw : 正回転方向のフラグ , rev : 反対回転方向のフラグ
         commando = b"\x10\x00\x7C\x00\x02\x04\x00\x00\x00"
-        data = 32
+        data = 0
+        stop = stop << 5
         rev = rev << 4
         fw  = fw  << 3
+        data = data | stop
         data = data | rev
         data = data | fw
         data = data.to_bytes(1,"big")
@@ -30,13 +32,17 @@ class blv_motor():
         self.client.write(commando)
         result = self.client.read()
 
-    #加減速時間の設定
-    def acc_dec_time()
-
+    #加減速時間の設定 1=0.1s
+    def set_acc_dec_time(self,time):
+        commando = b"\x10\x06\x00\x00\x02\x04"
+        time = time.to_bytes(4,"big")
+        commando = self.unit_id + commando + time
+        crc = calc_crc16(commando)
+        commando = commando + crc
+        self.client.write(commando)
+        result = self.client.read()
 
     #上記の２つをいっきに行う
     def set_speed_and_go(self,speed,fw,rev):
         self.set_speed(speed)
         self.go(fw,rev)
-
-        

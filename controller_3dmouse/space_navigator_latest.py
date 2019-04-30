@@ -91,7 +91,7 @@ while run:
             if diff > DIFF_SIZE and abs(Z_push) < Z_DED_ZONE:
                 print("R: ", R_list[0], R_list[1], R_list[2])
 
-        #ボタンの判定(左が2,右が1)
+        #ボタンの判定(左が2,右が1,同時押しが3)
         if data[0] == 3:
             if data[1]== 0:
                 print("push button : ", Button_number)

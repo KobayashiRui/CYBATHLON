@@ -31,7 +31,7 @@ Safety = 0
 
 while True:
     #セーフティの読み込み
-    Safety = 1 #ここでは確定1
+    Safety = 1 #ここで確定1だが実際はボタンの値を読み込む
     if Safety == 0:
         continue
 
@@ -88,16 +88,16 @@ while True:
         motor3.go(0)
         motor4.go(0)
     elif LU_mode == 1:
-        motor3.go_torque(150)#15%
-        motor4.go_torque(150)#15%
+        motor3.go_torque(300)#15%
+        motor4.go_torque(300)#15%
     elif LU_mode == 2:
-        motor3.go(17200)
-        motor4.go(17200)
+        motor3.go(17200)#位置移動
+        motor4.go(17200)#位置移動
     #####################################################
 
     #初期設定ブラシレスモータ関連########################
-    motor1.
-    motor2.
+    motor1.set_acc_dec_time(2)
+    motor2.set_acc_dec_time(2)
     #####################################################
 
     while True:
@@ -128,13 +128,17 @@ while True:
                     elif Mode == 1:
                         if Z_push > 300:
                             LU_mode = 2
-                            motor3.go(17200)
-                            motor4.go(17200)
+                            motor3.go(point=17200,speed=200,rate=1)
+                            motor4.go(point=17200,speed=200,rate=1)
+                            #motor3.go(point=13200,speed=200,rate=1)
+                            #motor4.go(point=13200,speed=200,rate=1)
+                            #motor3.go_torque(800)
+                            #motor4.go_torque(800)
                             
                         elif Z_push < -250:
                             LU_mode = 0
-                            motor3.go(0)
-                            motor4.go(0)
+                            motor3.go(point=0)
+                            motor4.go(point=0)
 
                     #Mode2 : アームモード
                     elif Mode == 2:
@@ -179,17 +183,21 @@ while True:
                             elif R_list[0] < 0:#右をはやく
                                 motor1.set_speed(int(abs(80*R_list[0]*0.01)) + int(R_list[2]*0.04))
                                 motor2.set_speed(int(abs(80*R_list[0]*0.01)))
-                            motor1.go(0,1)
-                            motor2.go(1,0)
+                            #motor1.go(0,1)
+                            #motor2.go(1,0)
+                            motor1.go(1,0)
+                            motor2.go(0,1)
                         elif R_list[0] < 0:  #後進移動
                             if R_list[1] >= 0:#左をはやく
                                 motor1.set_speed(int(abs(80*R_list[0]*0.01)))
-                                motor2.set_speed(int(abs(80*R_list[0]*0.01)) + int(R_list[2]*0.04))
+                                motor2.set_speed(int(abs(80*R_list[0]*0.01)) + int(abs(R_list[2]*0.04)))
                             elif R_list[1] < 0:#右をはやく
                                 motor1.set_speed(int(abs(80*R_list[0]*0.01)))
-                                motor2.set_speed(int(abs(80*R_list[0]*0.01)) + int(R_list[2]*0.04))
-                            motor1.go(1,0)
-                            motor2.go(0,1)
+                                motor2.set_speed(int(abs(80*R_list[0]*0.01)) + int(abs(R_list[2]*0.04)))
+                            #motor1.go(1,0)
+                            #motor2.go(0,1)
+                            motor1.go(0,1)
+                            motor2.go(1,0)
                         elif R_list[2] > 0: #右は前,左は後ろ
                             motor1.set_speed(int(abs(80*R_list[2]*0.01)))
                             motor2.set_speed(int(abs(80*R_list[2]*0.01)))
