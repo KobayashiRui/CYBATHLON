@@ -1,4 +1,5 @@
 from crc16 import calc_crc16
+import time
 
 class blv_motor():
     def __init__(self,client,unit_id):
@@ -13,7 +14,8 @@ class blv_motor():
         crc = calc_crc16(commando)
         commando = commando + crc
         self.client.write(commando)
-        result = self.client.read()
+        time.sleep(0.01)
+        #result = self.client.read()
 
     #回転開始関数(回転速度No.0)
     def go(self,fw,rev,stop=1): #fw : 正回転方向のフラグ , rev : 反対回転方向のフラグ
@@ -30,7 +32,8 @@ class blv_motor():
         crc = calc_crc16(commando)
         commando = commando + crc
         self.client.write(commando)
-        result = self.client.read()
+        time.sleep(0.01)
+        #result = self.client.read()
 
     #加減速時間の設定 1=0.1s
     def set_acc_dec_time(self,time):

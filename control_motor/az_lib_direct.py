@@ -35,7 +35,7 @@ class az_motor_direct():
         self.client.write(commando)
         result = self.client.read()
 
-    def go_list(self,list_number,speed=5000,rate=3000,stop_rate=3000):
+    def go_list(self,list_number,speed=6000,rate=3000,stop_rate=3000):
         if(self.move_list):
             commando = b"\x10\x00\x58\x00\x10\x20\x00\x00\x00\x00\x00\x00\x00\x01" 
             point = self.move_list[list_number]

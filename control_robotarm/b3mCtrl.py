@@ -310,7 +310,7 @@ class B3mClass(object):
 		txBuf = [0x03, B3mClass.__optionToCmd(option)] + id + [address, length]
 		rxBuf = self.__synchronize(txBuf, length+5)
 		if (rxBuf is False):
-			print("rx error ")
+			#print("rx error ")
 			return (False,False)
 		reRam = rxBuf[4:-1]
 		reStatus = rxBuf[2]

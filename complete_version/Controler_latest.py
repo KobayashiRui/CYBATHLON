@@ -13,9 +13,9 @@ import az_lib_direct
 
 
 #定数################################################
-DED_ZONE = 120
+DED_ZONE = 150
 Z_DED_ZONE = 250
-DIFF_SIZE = 5
+DIFF_SIZE = 1
 Z_DIFF_SIZE = 10
 #####################################################
 
@@ -128,8 +128,11 @@ while True:
                     elif Mode == 1:
                         if Z_push > 300:
                             LU_mode = 2
-                            motor3.go(point=17200,speed=200,rate=1)
-                            motor4.go(point=17200,speed=200,rate=1)
+                            motor5.go_list(3)
+                            time.sleep(5)
+                            motor3.go(point=15200,speed=200,rate=1)
+                            motor4.go(point=15200,speed=200,rate=1)
+                            motor5.go_list(RC_mode)
                             
                         elif Z_push < -250:
                             LU_mode = 0
@@ -168,10 +171,10 @@ while True:
                     #Mode:0 クローラモード
                     if Mode == 0:
                         if R_list[0] == 0 and R_list[1] == 0 and R_list[2]==0: #停止
-                            motor1.set_speed(0)
-                            motor2.set_speed(0)
-                            motor1.go(0,0)
-                            motor2.go(0,0)
+                            #motor1.set_speed(0)
+                            #motor2.set_speed(0)
+                            motor1.go(1,1)
+                            motor2.go(1,1)
                         elif R_list[0] > 0: #前進移動
                             if R_list[1] >= 0:#左をはやく
                                 motor1.set_speed(int(abs(80*R_list[0]*0.01)))
@@ -196,7 +199,7 @@ while True:
                             motor1.go(1,0)
                             motor2.go(1,0)
                             
-                        elif R_list[2] < 0: #左は前,右は後ろ
+                        elif R_list[2] < 0 and LU_mode==2: #左は前,右は後ろ
                             motor1.set_speed(int(abs(80*R_list[2]*0.01)))
                             motor2.set_speed(int(abs(80*R_list[2]*0.01)))
                             motor1.go(0,1)
