@@ -77,7 +77,7 @@ while True:
     motor2 = blv_lib.blv_motor(client,2) #左のクローラ
     motor3 = az_lib_direct.az_motor_direct(client,3) #リフトアップ右
     motor4 = az_lib_direct.az_motor_direct(client,4) #リフトアップ左
-    motor5 = az_lib_direct.az_motor_direct(client,5,[0,58436,70000,116750]) #リモートセンタ
+    motor5 = az_lib_direct.az_motor_direct(client,5,[0,58436,90000,116750]) #リモートセンタ
     #####################################################
 
     #初期移動ステッピングモータ関連######################
@@ -182,8 +182,10 @@ while True:
                             elif R_list[0] < 0:#右をはやく
                                 motor1.set_speed(int(abs(80*R_list[0]*0.01)) + int(R_list[2]*0.04))
                                 motor2.set_speed(int(abs(80*R_list[0]*0.01)))
-                            motor1.go(1,0)
-                            motor2.go(0,1)
+                            #motor1.go(1,0)
+                            #motor2.go(0,1)
+                            motor1.go(0,1)
+                            motor2.go(1,0)
                         elif R_list[0] < 0:  #後進移動
                             if R_list[1] >= 0:#左をはやく
                                 motor1.set_speed(int(abs(80*R_list[0]*0.01)))
@@ -191,8 +193,10 @@ while True:
                             elif R_list[1] < 0:#右をはやく
                                 motor1.set_speed(int(abs(80*R_list[0]*0.01)))
                                 motor2.set_speed(int(abs(80*R_list[0]*0.01)) + int(abs(R_list[2]*0.04)))
-                            motor1.go(0,1)
-                            motor2.go(1,0)
+                            #motor1.go(0,1)
+                            #motor2.go(1,0)
+                            motor1.go(1,0)
+                            motor2.go(0,1)
                         elif R_list[2] > 0: #右は前,左は後ろ
                             motor1.set_speed(int(abs(80*R_list[2]*0.01)))
                             motor2.set_speed(int(abs(80*R_list[2]*0.01)))
@@ -247,11 +251,15 @@ while True:
                             Mode = 0
                         else:
                             Mode += 1
+                        if Mode == 1:
+                            RC_flag = 0
                     elif Button_number == 2:
                         if Mode == 0:
                             Mode = 2
                         else:
                             Mode -= 1
+                        if Mode == 1:
+                            RC_flag = 0
                     print("Now Mode:",Mode)
 
                     Button_number = 0
