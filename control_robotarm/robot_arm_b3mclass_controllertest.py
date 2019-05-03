@@ -1,3 +1,4 @@
+import numpy as np
 import B3m_speed_servo_lib
 import usb.core
 import usb.util
@@ -53,7 +54,7 @@ Now_pos = my_chain.forward_kinematics([0]*4)[:,3][0:3] #展開後の初期姿勢
 ##############################################################
 #B3M(ロボットアーム展開)######################################
 my_chain_b3m = B3m_speed_servo_lib.B3M_class()
-my_chain_b3m.start_arm()
+#my_chain_b3m.start_arm()
 ##############################################################
 
 run = True
@@ -105,8 +106,8 @@ while run:
             if diff > DIFF_SIZE and abs(Z_push) < Z_DED_ZONE:
                 print("R: ", R_list[0], R_list[1], R_list[2])
                 #アームの地点の設定・更新(最大で1cm追加)
-                Now_pos[0] += R_list[0]/3500
-                Now_pos[1] += R_list[1]/3500
+                Now_pos[1] += R_list[0]/3500
+                Now_pos[0] -= R_list[1]/3500
                 #4*4行列を算出
                 Target_pos = np.eye(4)
                 Target_pos[0][3] = Now_pos[0]
@@ -115,7 +116,8 @@ while run:
                 #アームの角度を求める
                 target_angle = my_chain.inverse_kinematics(Target_pos)
                 #目標角度へ移動
-                my_chain_b3m.go_target_angle(target_angle[0:3])
+                #go_target_angle
+                my_chain_b3m.go_target_angle(np.rad2deg(target_angle[0:3]))
 
         #ボタンの判定(左が2,右が1,同時押しが3)
         if data[0] == 3:

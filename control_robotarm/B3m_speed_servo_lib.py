@@ -14,9 +14,9 @@ class B3M_class():
         self.idx = [2,1,3]
 
     def start_arm(self):
-        go_target_angle([160,0,0])
-        go_target_angle([0,-70,0])
-        go_target_angle([0,0,-140])
+        self.go_target_angle([160,0,0])
+        self.go_target_angle([160,-70,0])
+        self.go_target_angle([160,-70,-140])
 
         for id in range(len(self.idx)):
             hoge = self.robot_arm.setRam(self.idx[id], 0, "EncoderCount")
