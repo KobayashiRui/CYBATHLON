@@ -5,18 +5,23 @@ import b3mCtrl
 import time
 
 class B3M_class():
-    def __init__(self,now_angle):
+    def __init__(self):
         #ロボットアームの初期移動
         self.robot_arm = b3mCtrl.B3mClass()
         self.robot_arm.begin("/dev/ttyUSB0",1500000)
-        self.now_angle = now_angle
+        self.now_angle = [0,0,0]
         self.diff_angle = [-2.0, 2.0] #精度
         self.idx = [2,1,3]
 
     def start_arm(self):
+        go_target_angle([160,0,0])
+        go_target_angle([0,-70,0])
+        go_target_angle([0,0,-140])
+
         for id in range(len(self.idx)):
             hoge = self.robot_arm.setRam(self.idx[id], 0, "EncoderCount")
             time.sleep(0.01)
+        self.now_angle = [0,0,0]
 
     def go_target_angle(self,target_angle):
 

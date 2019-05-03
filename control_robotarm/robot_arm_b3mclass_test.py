@@ -1,4 +1,4 @@
-import B3m_speed_servo
+import B3m_speed_servo_lib
 
 servo = B3m_speed_servo.B3M_class([0,0,0])
 servo.start_arm()
