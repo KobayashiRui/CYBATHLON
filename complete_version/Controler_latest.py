@@ -109,8 +109,8 @@ while True:
         motor3.go_torque(300)#15%
         motor4.go_torque(300)#15%
     elif LU_mode == 2:
-        motor3.go(17200)#位置移動
-        motor4.go(17200)#位置移動
+        motor3.go(13200)#位置移動
+        motor4.go(13200)#位置移動
     #####################################################
 
     #初期設定ブラシレスモータ関連########################
@@ -150,8 +150,8 @@ while True:
                             LU_mode = 2
                             motor5.go_list(3)
                             time.sleep(5)
-                            motor3.go(point=15200,speed=200,rate=1)
-                            motor4.go(point=15200,speed=200,rate=1)
+                            motor3.go(point=13200,speed=200,rate=1)
+                            motor4.go(point=13200,speed=200,rate=1)
                             motor5.go_list(RC_mode)
                             
                         elif Z_push < -250:
