@@ -253,8 +253,12 @@ while True:
                         #リフトアップの判定###############################################
                         if abs(R_list[2]) > 340:
                             LU_mode = 1
-                            motor3.go_torque(150)
-                            motor4.go_torque(150)
+                            #motor3.go_torque(150)
+                            #motor4.go_torque(150)
+                            motor3.set_position_deviation(30000)
+                            motor4.set_position_deviation(30000)
+                            motor3.go_torque_pos(point=10000,op_current=150)
+                            motor4.go_torque_pos(point=10000,op_current=150)
                         ##################################################################
 
                     #Mode:2 アームモード

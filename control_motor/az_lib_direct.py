@@ -52,3 +52,26 @@ class az_motor_direct():
             result = self.client.read()
         else:
             print("Error")
+
+    def go_torque_pos(self,point,op_current,speed=2000,rate=1500,stop_rate=1500)
+        commando = b"\x10\x00\x58\x00\x10\x20\x00\x00\x00\x00\x00\x00\x00\x14" 
+        point = point.to_bytes(4,'big')
+        speed = speed.to_bytes(4,'big')
+        rate  = rate.to_bytes(4,'big')
+        stop_rate = stop_rate.to_bytes(4,'big')
+        op_current = op_current.to_bytes(4,'big')
+        trigger = b"\x00\x00\x00\x01"
+        commando = self.unit_id + commando + point + speed + rate + stop_rate + op_current + trigger
+        crc = calc_crc16(commando)
+        commando = commando + crc
+        self.client.write(commando)
+        result = self.client.read()
+
+    def set_position_deviation(self,rev_value):
+        commando = b"\x10\x03\x02\x00\x02\x04" 
+        rev_value = rev_value.to_bytes(4,'big')
+        commando = self.unit_id + commando + rev_value
+        crc = calc_crc16(commando)
+        commando = commando + crc
+        self.client.write(commando)
+        result = self.client.read()
