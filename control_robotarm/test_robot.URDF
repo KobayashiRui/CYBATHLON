@@ -1,0 +1,29 @@
+<robot name="test_robot">
+    <link name="base_link"/>
+    <link name="link1"/>
+    <link name="link2"/>
+    <link name="link3"/>
+
+    <joint name="joint0" type="revolute">
+        <parent link="base_link"/>
+        <child link="link1"/>
+        <axis xyz="0 1 0"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <limit lower="-3.15" upper="3.15" effort="0" velocity="0"/>
+    </joint>
+
+    <joint name="joint1" type="revolute">
+        <parent link="link1"/>
+        <child link="link2"/>
+        <axis xyz="0 1 0"/>
+        <origin xyz="0 0 5" rpy="0 0 0"/>
+        <limit lower="-1.6" upper="-0.1" effort="0" velocity="0"/>
+    </joint>
+    <joint name="joint2" type="revolute">
+        <parent link="link2"/>
+        <child link="link3"/>
+        <axis xyz="0 1 0"/>
+        <origin xyz="0 0 5" rpy="0 0 0"/>
+        <limit lower="-3.14" upper="3.14" effort="0" velocity="0"/>
+    </joint>
+</robot>

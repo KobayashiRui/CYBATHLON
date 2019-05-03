@@ -1,8 +1,7 @@
 from ikpy.chain import Chain
 from ikpy.link import OriginLink, URDFLink
 import matplotlib.pyplot
-from mpl_toolkits.mplot3d import Axes3D
-
+from mpl_toolkits.mplot3d import Axes3D 
 ax = matplotlib.pyplot.figure().add_subplot(111, projection='3d')
 
 my_chain = Chain(name='cybathlon', links=[
