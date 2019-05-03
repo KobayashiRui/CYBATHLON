@@ -53,7 +53,7 @@ class az_motor_direct():
         else:
             print("Error")
 
-    def go_torque_pos(self,point,op_current,speed=2000,rate=1500,stop_rate=1500)
+    def go_torque_pos(self,point,op_current,speed=2000,rate=1500,stop_rate=1500):
         commando = b"\x10\x00\x58\x00\x10\x20\x00\x00\x00\x00\x00\x00\x00\x14" 
         point = point.to_bytes(4,'big')
         speed = speed.to_bytes(4,'big')
