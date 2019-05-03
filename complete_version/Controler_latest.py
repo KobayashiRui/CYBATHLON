@@ -1,3 +1,4 @@
+import RPi.GPIO as GPIO
 import usb.core
 import usb.util
 import os 
@@ -11,6 +12,13 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '../control_motor'))
 import blv_lib
 import az_lib_direct
 
+#GPIO_init###########################################
+pin_list = [12,16,18] #move,rclu,arm
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(pin_list[0],GPIO.OUT)
+GPIO.setup(pin_list[1],GPIO.OUT)
+GPIO.setup(pin_list[2],GPIO.OUT)
+#####################################################
 
 #定数################################################
 DED_ZONE = 150
@@ -24,6 +32,13 @@ Z_DIFF_SIZE = 10
 Mode = 0 #0:クローラ, 1:リモートセンタ機構&リフトアップ, 2:ロボットアーム
 RC_mode = 1 #0:階段降り, 1:真ん中, 2:椅子座り, 3:階段上り
 LU_mode = 1 #0:収納, 1:テンション維持モード 2:リフトアップ
+#####################################################
+
+#LED#################################################
+def LED_setting(pin_data_list):
+    global pin_list
+    for i in range(len(pin_list)):
+        GPIO.output(pin_list[i],pin_data_list[i])
 #####################################################
 
 #サーフティーの状態
@@ -45,6 +60,9 @@ while True:
 
     #RC変数#################################################
     RC_flag = 1         #クリックの判定(1の時は次への移動をしない)
+    ########################################################
+    #LED_setting############################################
+    LED_setting([1,0,0]) 
     ########################################################
 
     dev = usb.core.find(idVendor=0x46d, idProduct=0xc626)
@@ -99,6 +117,8 @@ while True:
     motor1.set_acc_dec_time(2)
     motor2.set_acc_dec_time(2)
     #####################################################
+
+
 
     while True:
         try:
@@ -261,6 +281,12 @@ while True:
                         if Mode == 1:
                             RC_flag = 0
                     print("Now Mode:",Mode)
+                    if Mode == 0:
+                        LED_setting([1,0,0])
+                    elif Mode == 1:
+                        LED_setting([0,1,0])
+                    elif Mode == 2:
+                        LED_setting([0,0,1])
 
                     Button_number = 0
 
