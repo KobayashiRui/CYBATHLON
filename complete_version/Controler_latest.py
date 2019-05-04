@@ -60,13 +60,17 @@ my_chain_b3m.go_pos(4,0)#手首の位置を設定
 b3m_target_angle = 0
 #####################################################
 
-#リミッター##########################################
-#X_MAX_limit = 1.3 #1m30まで
-#X_MIN_limit = 0.5  
-#Y_MAX_limit = 
-#Y_MIN_limit = 
-#Z_MAX_limit = 
-#Z_MIN_limit = 
+#リミッター関連######################################
+#ロボットアームの位置制御
+X_MAX_limit = 1.3 #1m30まで
+X_MIN_limit = 0.5  
+Y_MAX_limit = 3
+Y_MIN_limit = -3
+Z_MAX_limit = 3
+Z_MIN_limit = -3
+#手首の制限
+Angle_MAX = 3100
+Angle_MIN = -3100
 #####################################################
 
 #サーフティーの状態
@@ -189,19 +193,20 @@ while True:
 
                     #Mode2 : アームモード
                     elif Mode == 2 and ARM_flag == 1:
-                        #アームの目標地点の設定
-                        Now_pos[2] -= Z_push/3500
-                        #4*4行列を算出
-                        Target_pos = np.eye(4)
-                        Target_pos[0][3] = Now_pos[0]
-                        Target_pos[1][3] = Now_pos[1]
-                        Target_pos[2][3] = Now_pos[2]
-                        #アームの角度を求める
-                        target_angle = my_chain.inverse_kinematics(Target_pos)
-                        #目標角度へ移動
-                        #go_target_angle
-                        print("go arm")
-                        result = my_chain_b3m.go_target_angle(np.rad2deg(target_angle[0:3]))
+                        if Z_MIN_limit <= (Now_pos[2] - Z_push/3500)  and (Now_pos[2] - Z_push/3500) <= Z_MAX_limit :
+                            #アームの目標地点の設定
+                            Now_pos[2] -= Z_push/3500
+                            #4*4行列を算出
+                            Target_pos = np.eye(4)
+                            Target_pos[0][3] = Now_pos[0]
+                            Target_pos[1][3] = Now_pos[1]
+                            Target_pos[2][3] = Now_pos[2]
+                            #アームの角度を求める
+                            target_angle = my_chain.inverse_kinematics(Target_pos)
+                            #目標角度へ移動
+                            #go_target_angle
+                            print("go arm")
+                            result = my_chain_b3m.go_target_angle(np.rad2deg(target_angle[0:3]))
             ##############################################################################
 
             #Rの移動判定##################################################################
@@ -303,17 +308,35 @@ while True:
 
                     #Mode:2 アームモード
                 elif Mode == 2 and ARM_flag == 1:
-                        if R_list[0] == 0 and R_list[1] ==0 and R_list[2]>250:
-                            print("angle1:",b3m_target_angle)
+                    #手首回転
+                    if R_list[0] == 0 and R_list[1] ==0 and R_list[2]>250:
+                        print("angle1:",b3m_target_angle)
+                        if (b3m_target_angle-1000) >= Angle_MIN:
+                            b3m_target_angle -= 1000
+                            my_chain_b3m.go_pos(4,b3m_target_angle)#手首の位置を設定
+
+                    #手首回転
+                    elif R_list[0] == 0 and R_list[1] ==0 and R_list[2]<-250:
+                        print("angle2",b3m_target_angle)
+                        if (b3m_target_angle+1000) <= Angle_MAX:
                             b3m_target_angle += 1000
                             my_chain_b3m.go_pos(4,b3m_target_angle)#手首の位置を設定
 
-                        elif R_list[0] == 0 and R_list[1] ==0 and R_list[2]<-250:
-                            print("angle2",b3m_target_angle)
-                            b3m_target_angle -= 1000
-                            my_chain_b3m.go_pos(4,b3m_target_angle)#手首の位置を設定
-                        elif R_list[0] != 0 or R_list[1] != 0:
+                    elif R_list[0] != 0 or R_list[1] != 0:
+                        if X_MIN_limit <= (Now_pos[0] + R_list[0]/3500)  and (Now_pos[0] + R_list[0]/3500) <= X_MAX_limit :
                             Now_pos[0] += R_list[0]/3500
+                            #4*4行列を算出
+                            Target_pos = np.eye(4)
+                            Target_pos[0][3] = Now_pos[0]
+                            Target_pos[1][3] = Now_pos[1]
+                            Target_pos[2][3] = Now_pos[2]
+                            #アームの角度を求める
+                            target_angle = my_chain.inverse_kinematics(Target_pos)
+                            #目標角度へ移動
+                            #go_target_angle
+                            print("go arm")
+                            result = my_chain_b3m.go_target_angle(np.rad2deg(target_angle[0:3]))
+                        if Y_MIN_limit <= (Now_pos[1] - R_list[1]/3500)  and (Now_pos[1] - R_list[1]/3500) <= Y_MAX_limit :
                             Now_pos[1] -= R_list[1]/3500
                             #4*4行列を算出
                             Target_pos = np.eye(4)
