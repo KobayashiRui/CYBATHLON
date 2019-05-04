@@ -55,8 +55,8 @@ Now_pos = my_chain.forward_kinematics([0]*4)[:,3][0:3]
 
 #B3M#################################################
 my_chain_b3m = B3m_speed_servo_lib.B3M_class()
-my_chain.set_origin()
-my_chain.go_pos(4,0)#手首の位置を設定
+my_chain_b3m.set_origin()
+my_chain_b3m.go_pos(4,0)#手首の位置を設定
 b3m_target_angle = 0
 #####################################################
 
@@ -296,11 +296,11 @@ while True:
                     elif Mode == 2 and ARM_flag == 1:
                         if R_list[0] == 0 and R_list[1] ==0 and R_list[2]>0:
                             b3m_target_angle += 3200
-                            my_chain.go_pos(4,b3m_target_angle)#手首の位置を設定
+                            my_chain_b3m.go_pos(4,b3m_target_angle)#手首の位置を設定
 
                         elif R_list[0] == 0 and R_list[1] ==0 and R_list[2]<0:
                             b3m_target_angle -= 3200
-                            my_chain.go_pos(4,b3m_target_angle)#手首の位置を設定
+                            my_chain_b3m.go_pos(4,b3m_target_angle)#手首の位置を設定
                         else:
                             Now_pos[0] += R_list[0]/3500
                             Now_pos[1] -= R_list[1]/3500
