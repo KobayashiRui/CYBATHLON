@@ -1,5 +1,4 @@
 import RPi.GPIO as GPIO
-import numpy as np
 import usb.core
 import usb.util
 import os 
@@ -8,10 +7,6 @@ from time import gmtime, strftime
 import time
 import copy
 import serial
-import B3m_speed_servo_lib
-from ikpy.chain import Chain
-from ikpy.link import OriginLink, URDFLink
-
 #control_motorディレクトリへのパを追加
 sys.path.append(os.path.join(os.path.dirname(__file__), '../control_motor'))
 import blv_lib
@@ -37,7 +32,6 @@ Z_DIFF_SIZE = 10
 Mode = 0 #0:クローラ, 1:リモートセンタ機構&リフトアップ, 2:ロボットアーム
 RC_mode = 1 #0:階段降り, 1:真ん中, 2:椅子座り, 3:階段上り
 LU_mode = 1 #0:収納, 1:テンション維持モード 2:リフトアップ
-ARM_flag = 0
 #####################################################
 
 #LED#################################################
@@ -45,19 +39,6 @@ def LED_setting(pin_data_list):
     global pin_list
     for i in range(len(pin_list)):
         GPIO.output(pin_list[i],pin_data_list[i])
-#####################################################
-
-#ロボットアームアームの初期位置を設定################
-my_chain = Chain.from_urdf_file("cybathlon_robotarm.URDF")
-#展開後の姿勢データから位置データを算出
-Now_pos = my_chain.forward_kinematics([0]*4)[:,3][0:3]
-#####################################################
-
-#B3M#################################################
-my_chain_b3m = B3m_speed_servo_lib.B3M_class()
-my_chain.set_origin()
-my_chain.go_pos(4,0)#手首の位置を設定
-b3m_target_angle = 0
 #####################################################
 
 #サーフティーの状態
@@ -179,20 +160,8 @@ while True:
                             motor4.go(point=0)
 
                     #Mode2 : アームモード
-                    elif Mode == 2 and ARM_flag == 1:
-                        #アームの目標地点の設定
-                        Now_pos[2] -= Z_push/3500
-                        #4*4行列を算出
-                        Target_pos = np.eye(4)
-                        Target_pos[0][3] = Now_pos[0]
-                        Target_pos[1][3] = Now_pos[1]
-                        Target_pos[2][3] = Now_pos[2]
-                        #アームの角度を求める
-                        target_angle = my_chain.inverse_kinematics(Target_pos)
-                        #目標角度へ移動
-                        #go_target_angle
-                        print("go arm")
-                        result = my_chain_b3m.go_target_angle(np.rad2deg(target_angle[0:3]))
+                    elif Mode == 2:
+                        pass
             ##############################################################################
 
             #Rの移動判定##################################################################
@@ -293,29 +262,8 @@ while True:
                         ##################################################################
 
                     #Mode:2 アームモード
-                    elif Mode == 2 and ARM_flag == 1:
-                        if R_list[0] == 0 and R_list[1] ==0 and R_list[2]>0:
-                            b3m_target_angle += 3200
-                            my_chain.go_pos(4,b3m_target_angle)#手首の位置を設定
-
-                        elif R_list[0] == 0 and R_list[1] ==0 and R_list[2]<0:
-                            b3m_target_angle -= 3200
-                            my_chain.go_pos(4,b3m_target_angle)#手首の位置を設定
-                        else:
-                            Now_pos[0] += R_list[0]/3500
-                            Now_pos[1] -= R_list[1]/3500
-                            #4*4行列を算出
-                            Target_pos = np.eye(4)
-                            Target_pos[0][3] = Now_pos[0]
-                            Target_pos[1][3] = Now_pos[1]
-                            Target_pos[2][3] = Now_pos[2]
-                            #アームの角度を求める
-                            target_angle = my_chain.inverse_kinematics(Target_pos)
-                            #目標角度へ移動
-                            #go_target_angle
-                            print("go arm")
-                            result = my_chain_b3m.go_target_angle(np.rad2deg(target_angle[0:3]))
-
+                    elif Mode == 1:
+                        pass
             ##############################################################################
 
             #ボタンの判定(左が2,右が1)####################################################
@@ -336,10 +284,6 @@ while True:
                             Mode -= 1
                         if Mode == 1:
                             RC_flag = 0
-                    elif Button_number == 3:
-                        my_chain_b3m.start_arm()
-                        ARM_flag = 1
-
                     print("Now Mode:",Mode)
                     if Mode == 0:
                         LED_setting([1,0,0])

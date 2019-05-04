@@ -12,12 +12,14 @@ class B3M_class():
         self.now_angle = [0,0,0]
         self.diff_angle = [-2.0, 2.0] #精度
         self.idx = [2,1,3]
+    
+    def set_origin(self):
+        self.go_target_angle([0,0,0])
 
     def start_arm(self):
-        self.go_target_angle([160,0,0])
-        self.go_target_angle([160,-30,0])
-        self.go_target_angle([160,-30,-140])
+        self.go_target_angle([180,-30,-100])
 
+        #エンコードカウントを0に設定
         for id in range(len(self.idx)):
             hoge = self.robot_arm.setRam(self.idx[id], 0, "EncoderCount")
             time.sleep(0.01)
