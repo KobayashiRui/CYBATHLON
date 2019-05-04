@@ -17,7 +17,7 @@ class B3M_class():
         self.go_target_angle([0,0,0])
 
     def start_arm(self):
-        self.go_target_angle([0,,-100])
+        self.go_target_angle([0,0,-100])
         self.go_target_angle([0,-30,-100])
 
         #エンコードカウントを0に設定
@@ -29,7 +29,7 @@ class B3M_class():
     def go_pos(self,id_number,target_angle):
         #self.robot_arm.TrajectoryType(id_number,"EVEN")
         self.robot_arm.setMode(id_number,"POSITION")
-        self.robot_arm.positionCmd(0,3200,target_angle)
+        self.robot_arm.positionCmd(id_number,target_angle)
 
     def go_target_angle(self,target_angle):
 

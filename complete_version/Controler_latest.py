@@ -60,6 +60,15 @@ my_chain_b3m.go_pos(4,0)#手首の位置を設定
 b3m_target_angle = 0
 #####################################################
 
+#リミッター##########################################
+#X_MAX_limit = 1.3 #1m30まで
+#X_MIN_limit = 0.5  
+#Y_MAX_limit = 
+#Y_MIN_limit = 
+#Z_MAX_limit = 
+#Z_MIN_limit = 
+#####################################################
+
 #サーフティーの状態
 Safety = 0
 
@@ -293,15 +302,17 @@ while True:
                         ##################################################################
 
                     #Mode:2 アームモード
-                    elif Mode == 2 and ARM_flag == 1:
-                        if R_list[0] == 0 and R_list[1] ==0 and R_list[2]>0:
-                            b3m_target_angle += 3200
+                elif Mode == 2 and ARM_flag == 1:
+                        if R_list[0] == 0 and R_list[1] ==0 and R_list[2]>250:
+                            print("angle1:",b3m_target_angle)
+                            b3m_target_angle += 1000
                             my_chain_b3m.go_pos(4,b3m_target_angle)#手首の位置を設定
 
-                        elif R_list[0] == 0 and R_list[1] ==0 and R_list[2]<0:
-                            b3m_target_angle -= 3200
+                        elif R_list[0] == 0 and R_list[1] ==0 and R_list[2]<-250:
+                            print("angle2",b3m_target_angle)
+                            b3m_target_angle -= 1000
                             my_chain_b3m.go_pos(4,b3m_target_angle)#手首の位置を設定
-                        else:
+                        elif R_list[0] != 0 or R_list[1] != 0:
                             Now_pos[0] += R_list[0]/3500
                             Now_pos[1] -= R_list[1]/3500
                             #4*4行列を算出
