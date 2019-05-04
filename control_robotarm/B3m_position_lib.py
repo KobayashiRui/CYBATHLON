@@ -15,18 +15,13 @@ class B3M_class():
 
     def start_arm(self):
         self.go_target_angle([160,0,0])
-        self.go_target_angle([160,-30,0])
-        self.go_target_angle([160,-30,-140])
+        self.go_target_angle([160,-70,0])
+        self.go_target_angle([160,-70,-140])
 
         for id in range(len(self.idx)):
             hoge = self.robot_arm.setRam(self.idx[id], 0, "EncoderCount")
             time.sleep(0.01)
         self.now_angle = [0,0,0]
-
-    def go_pos(self,id_number,target_angle):
-        self.robot_arm.TrajectoryType(id_number,"EVEN")
-        self.robot_arm.setMode(id_number,"POSITION")
-        self.robot_arm.positionCmd(target_angle)
 
     def go_target_angle(self,target_angle):
 

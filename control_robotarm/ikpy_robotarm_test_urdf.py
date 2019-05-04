@@ -24,4 +24,5 @@ print("start")
 my_chain.plot([0,0,0,0],ax)
 pos = my_chain.forward_kinematics([0]*4)[:,3][0:3]
 print(pos)
-matplotlib.pyplot.show()
+#matplotlib.pyplot.show()
+matplotlib.pyplot.pause(1)

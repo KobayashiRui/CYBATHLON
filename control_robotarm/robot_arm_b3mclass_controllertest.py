@@ -79,8 +79,18 @@ while run:
             if diff > Z_DIFF_SIZE and sum(R_list) == 0:
                 print("Push: ",Z_push)
                 #アームの目標地点の設定
+                Now_pos[2] -= Z_push/3500
+                #4*4行列を算出
+                Target_pos = np.eye(4)
+                Target_pos[0][3] = Now_pos[0]
+                Target_pos[1][3] = Now_pos[1]
+                Target_pos[2][3] = Now_pos[2]
                 #アームの角度を求める
+                target_angle = my_chain.inverse_kinematics(Target_pos)
                 #目標角度へ移動
+                #go_target_angle
+                print("go arm")
+                result = my_chain_b3m.go_target_angle(np.rad2deg(target_angle[0:3]))
 
         #回転の移動判定
         if data[0] == 2:
@@ -106,8 +116,8 @@ while run:
             if diff > DIFF_SIZE and abs(Z_push) < Z_DED_ZONE:
                 print("R: ", R_list[0], R_list[1], R_list[2])
                 #アームの地点の設定・更新(最大で1cm追加)
-                Now_pos[1] += R_list[0]/3500
-                Now_pos[0] -= R_list[1]/3500
+                Now_pos[0] += R_list[0]/3500
+                Now_pos[1] -= R_list[1]/3500
                 #4*4行列を算出
                 Target_pos = np.eye(4)
                 Target_pos[0][3] = Now_pos[0]
@@ -117,7 +127,8 @@ while run:
                 target_angle = my_chain.inverse_kinematics(Target_pos)
                 #目標角度へ移動
                 #go_target_angle
-                my_chain_b3m.go_target_angle(np.rad2deg(target_angle[0:3]))
+                print("go arm")
+                result = my_chain_b3m.go_target_angle(np.rad2deg(target_angle[0:3]))
 
         #ボタンの判定(左が2,右が1,同時押しが3)
         if data[0] == 3:
